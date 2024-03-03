@@ -14,7 +14,6 @@ st.set_page_config(layout="wide")
 def chatbot_response(question, context):
     response = requests.post("http://127.0.0.1:5000/generate", json={"question": question, "context": context})
     # response = requests.post("http://127.0.0.1:5000", json={"question": question}, headers={"Content-Type": "application/json"})
-    print(response)
     if response.status_code == 200:
         return response.json()
     else:
@@ -58,7 +57,7 @@ def get_user_info(username):
     df = pd.read_csv(user_file)
     user_info_str = df.loc[df['username'] == username, 'business_info'].values[0]
     try:
-        user_info_str = user_info_str.strip('"""')
+        user_info_str = user_info_str.strip('"""') if not (math.isnan(user_info_str)) else {}
         # If it's a string representation of a dict, safely convert it to a dict
         user_info = ast.literal_eval(user_info_str) if user_info_str else {}
     except (ValueError, SyntaxError) as e:
@@ -137,9 +136,12 @@ def main():
             # st.subheader("Nexus AI Chatbot")
             user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
             # Format the context string using user_info
-            context_str = (
-                f"Please use the following information about the user when answering all his questions, always address and talk to him using his/her name. The user you are talking to is {st.session_state['username']}. His business type is: {user_info['business_type']}, his legal form is: {user_info['legal_form']}, he has an office?: {user_info['has_office']}, his business sector is: {user_info['sector']}, and his business description is: {user_info['description']}."
-            )
+            if user_info:
+                context_str = (
+                    f"Please use the following information about the user when answering all his questions, always address and talk to him using his/her name. The user you are talking to is {st.session_state['username']}. His business type is: {user_info['business_type']}, his legal form is: {user_info['legal_form']}, he has an office?: {user_info['has_office']}, his business sector is: {user_info['sector']}, and his business description is: {user_info['description']}."
+                )
+            else:
+                context_str = ""
             # Add a toggle for Private Mode in the sidebar
             # private_mode = st.checkbox('Private Mode', value=False)
             private_mode = st.toggle("Protect your data")
@@ -183,25 +185,6 @@ def main():
             """
             components.html(chatbot_html, height=700)
 
-            # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
-            # if chatbot_type == "Business":
-            #     user_input = st.text_input("Ask me anything related to your business!", key="user_input")
-            # else:
-            #     user_input = st.text_input("Tell me who you want to connect with!", key="user_input")
-
-            # if st.button("Submit"):
-            #     if user_input:
-            #         user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
-            #         response = chatbot_response(user_input, user_info)
-            #         # Save the Q&A to session state
-            #         st.session_state['chat_history'].append({"question": user_input, "answer": response})
-            #         # st.session_state['user_input'] = ""  # Clear input field
-                    
-            #         # Display chat history
-            #         for chat in st.session_state['chat_history']:
-            #             st.text(f"Q: {chat['question']}")
-            #             st.text(f"A: {chat['answer']}")
-            #             st.write("---")  # Divider
     else:
         st.title("Nexus AI")
 
