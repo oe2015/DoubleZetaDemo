@@ -4,9 +4,12 @@ import hashlib
 import os
 import json  # for better data serialization
 import ast
+import streamlit.components.v1 as components
 
 
 import requests
+st.set_page_config(layout="wide")
+
 
 def chatbot_response(question, context):
     response = requests.post("http://127.0.0.1:5000/generate", json={"question": question, "context": context})
@@ -20,6 +23,7 @@ def chatbot_response(question, context):
 # File where user details are stored (for simplicity, using CSV here)
 user_file = "users.csv"
 logo_path = "/Users/omarelherraoui/Desktop/Double_Zeta/logo.png"  # Adjust the path as needed
+logo_path1 = "/Users/omarelherraoui/Desktop/Double_Zeta/nexus.webp"
 
 def create_user_file():
     if not os.path.exists(user_file):
@@ -72,7 +76,9 @@ def hash_password(password):
     return hashlib.sha256(str.encode(password)).hexdigest()
 
 def display_logo():
-    st.image(logo_path, width=100)  # Adjust width as needed
+    col1, col2, col3 = st.columns([2, 1, 2])  # Adjust the ratio as needed
+    with col2:  # Using the middle column for the image
+        st.image(logo_path1, use_column_width=True)  # This will center the image in the middle column
 
 def business_info_form():
     st.subheader("Tell us about your business")
@@ -105,7 +111,7 @@ def main():
         st.session_state['chat_history'] = []  # Initialize chat history
 
     if st.session_state['logged_in']:
-        st.title(f"Welcome to Double Zeta, {st.session_state['username']}!")
+        st.title(f"Welcome to Nexus, {st.session_state['username']}!")
         page = st.sidebar.selectbox("Menu", ["Update Information", "Profile", "Chatbot Interface"])
         
         if page == "Update Information":
@@ -128,29 +134,76 @@ def main():
                 st.write("No business information found.")
             
         elif page == "Chatbot Interface":
-            st.subheader("Chatbot")
+            # st.subheader("Nexus AI Chatbot")
+            user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
+            # Format the context string using user_info
+            context_str = (
+                f"Please use the following information about the user when answering all his questions, always address and talk to him using his/her name. The user you are talking to is {st.session_state['username']}. His business type is: {user_info['business_type']}, his legal form is: {user_info['legal_form']}, he has an office?: {user_info['has_office']}, his business sector is: {user_info['sector']}, and his business description is: {user_info['description']}."
+            )
+            # Add a toggle for Private Mode in the sidebar
+            # private_mode = st.checkbox('Private Mode', value=False)
+            private_mode = st.toggle("Protect your data")
+            if private_mode:
+                context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by Nexus AI."
 
-            chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
-            if chatbot_type == "Business":
-                user_input = st.text_input("Ask me anything related to your business!", key="user_input")
-            else:
-                user_input = st.text_input("Tell me who you want to connect with!", key="user_input")
+            chatbot_html = f"""
+            <style>
+                /* Reset CSS for the Streamlit main container */
+                .main .block-container {{
+                    padding-top: 0 !important;
+                    padding-right: 0 !important;
+                    padding-left: 0 !important;
+                    padding-bottom: 0 !important;
+                }}
+                /* Full height for the chatbot container and removal of any default spacing */
+                .css-1d391kg {{
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }}
+                /* Ensure the chatbot fills the width and has no border or shadow */
+                chaindesk-chatbox-standard {{
+                    width: 100% !important;
+                    height: 700px !important;
+                    background-color: #000000;
+                    border: none !important;
+                    box-shadow: none !important;
+                }}
+            </style>
 
-            if st.button("Submit"):
-                if user_input:
-                    user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
-                    response = chatbot_response(user_input, user_info)
-                    # Save the Q&A to session state
-                    st.session_state['chat_history'].append({"question": user_input, "answer": response})
-                    # st.session_state['user_input'] = ""  # Clear input field
+            <div style="width: 100%; height: 700px;">
+                <script type="module">
+                import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+                Chatbox.initStandard({{
+                    agentId: 'clt9u89kt0028o98iodv4ek65',
+                    context: `{context_str}`
+                }});
+                </script>
+                <chaindesk-chatbox-standard style="height: 730px;"></chaindesk-chatbox-standard>
+            </div>
+            """
+            components.html(chatbot_html, height=700)
+
+            # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
+            # if chatbot_type == "Business":
+            #     user_input = st.text_input("Ask me anything related to your business!", key="user_input")
+            # else:
+            #     user_input = st.text_input("Tell me who you want to connect with!", key="user_input")
+
+            # if st.button("Submit"):
+            #     if user_input:
+            #         user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
+            #         response = chatbot_response(user_input, user_info)
+            #         # Save the Q&A to session state
+            #         st.session_state['chat_history'].append({"question": user_input, "answer": response})
+            #         # st.session_state['user_input'] = ""  # Clear input field
                     
-                    # Display chat history
-                    for chat in st.session_state['chat_history']:
-                        st.text(f"Q: {chat['question']}")
-                        st.text(f"A: {chat['answer']}")
-                        st.write("---")  # Divider
+            #         # Display chat history
+            #         for chat in st.session_state['chat_history']:
+            #             st.text(f"Q: {chat['question']}")
+            #             st.text(f"A: {chat['answer']}")
+            #             st.write("---")  # Divider
     else:
-        st.title("Double Zeta")
+        st.title("Nexus AI")
 
         menu = ["Login", "SignUp"]
         choice = st.sidebar.selectbox("Menu", menu)
