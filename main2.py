@@ -82,14 +82,87 @@ def display_logo():
     with col2:  # Using the middle column for the image
         st.image(logo_path1, use_column_width=True)  # This will center the image in the middle column
 
-def business_info_form():
-    st.subheader("Tell us about your business")
-    business_type = st.selectbox("What type of business are you?", ("Startup", "SME", "Freelancer"))
-    legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
-    has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
-    sector = st.selectbox("What sector do you operate in?", ("Technology", "Healthcare", "Finance", "Education", "Other"))  # Update sectors as needed
-    business_description = st.text_area("Give a short description about your business, your goals, and objectives")
+# def business_info_form():
+#     st.subheader("Tell us about your business")
+    # st.write("What type of business are you?")
+    # col1, col2, col3 = st.columns(3)
+    # with col1:
+    #     if st.button("🚀 Startup", key="startup"):
+    #         update_state('business_type', "Startup")
+    # with col2:
+    #     if st.button("🏢 SME", key="sme"):
+    #         update_state('business_type', "SME")
+    # with col3:
+    #     if st.button("💼 Freelancer", key="freelancer"):
+    #         update_state('business_type', "Freelancer")
+    # #business_type = st.selectbox("What type of business are you?", ("Startup", "SME", "Freelancer"))
+    # legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
+    # has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
+    # sector = st.selectbox("What sector do you operate in?", ("Technology", "Healthcare", "Finance", "Education", "Other"))  # Update sectors as needed
+    # business_description = st.text_area("Give a short description about your business, your goals, and objectives")
+    # Business Type Question
+
     
+    # Inject custom CSS for styling the buttons to be larger and closer together
+   # Function placeholder for 'update_state' (Ensure you have your own implementation)
+
+
+def business_info_form():
+        # Inject custom CSS for styling the buttons to be larger and closer together
+    st.markdown("""
+    <style>
+    .streamlit-button {
+        display: inline-flex; /* Align buttons in a row */
+        width: auto; /* Adjust width automatically to content */
+        margin: 5px; /* Keep a small margin */
+        padding: 10px 20px; /* Padding inside buttons */
+        border-radius: 30px; /* Rounded corners for buttons */
+        font-size: 16px; /* Font size for buttons */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.subheader("Tell us about your business")
+
+    # Business Type Question
+    st.write("What type of business are you?")
+    business_type=st.session_state.get('business_type', None)
+    cols = st.columns(4)
+    business_types = [("🚀 Startup", "Startup"), ("🏢 SME", "SME"), 
+                    ("💼 Freelancer", "Freelancer"), ("📝 Other", "Other")]
+    for idx, (emoji, bt) in enumerate(business_types):
+        if cols[idx].button(f"{emoji}", key=f"business_{bt.lower()}"):
+            st.session_state['business_type'] = bt
+
+    # Check if 'Other' business type is specified and get input
+    if business_type == "Other":
+        st.session_state['business_type'] = st.text_input("Please specify your business type:")
+
+    legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
+  
+
+    # Office Location Question
+    has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
+
+    # Sector Question with emoticons
+    st.write("What sector do you operate in?")
+
+    sector=st.session_state.get('sector', None)
+    cols = st.columns(5)
+    sectors = [("💻 Technology", "Technology"), ("🩺 Healthcare", "Healthcare"), 
+            ("💲 Finance", "Finance"), ("📚 Education", "Education"), ("📝 Other", "Other")]
+    for idx, (emoji, sec) in enumerate(sectors):
+        if cols[idx].button(f"{emoji}", key=f"sector_{sec.lower()}"):
+            st.session_state['sector'] = sec
+
+    # Check if 'Other' sector is specified and get input
+    if sector == "Other":
+        st.session_state['sector'] = st.text_input("Please specify your sector:")
+
+    # Business Description Question
+    business_description = st.text_area("Give a short description about your business, your goals, and objectives")
+
+    # Submit Button
     if st.button("Submit"):
         business_info = {
             "business_type": business_type,
@@ -98,9 +171,11 @@ def business_info_form():
             "sector": sector,
             "description": business_description
         }
-        update_user_info(st.session_state['username'], str(business_info))  # Consider a better serialization method or database structure
+        # Assume 'username' is obtained from Streamlit's session state or other context
+        update_user_info(st.session_state.get('username', 'default_username'), business_info)
         st.success("Business information saved!")
-
+  
+   
 
 def main():
     create_user_file()
@@ -119,9 +194,10 @@ def main():
         if page == "Update Information":
             # Allow users to update their business information
             st.subheader("Update Your Business Information")
-            textForm = st.toggle("Write your own data")
+            textForm = st.toggle("I prefer to write freely")
             if textForm:
-                business_description = st.text_area("Tell us more about your company", height=300)
+                st.subheader("Tell us about your business")
+                business_description = st.text_area("Please provide a brief description of your business, including its core activities, industry, target market, and any key products or services offered",height=200)
               
             
                 if st.button("Submit"):
