@@ -22,7 +22,7 @@ def chatbot_response(question, context):
 # File where user details are stored (for simplicity, using CSV here)
 user_file = "users.csv"
 logo_path = "/Users/omarelherraoui/Desktop/Double_Zeta/logo.png"  # Adjust the path as needed
-logo_path1 = "/Users/omarelherraoui/Desktop/Double_Zeta/nexus.webp"
+logo_path1 = "/Users/omarelherraoui/Desktop/Double_Zeta/Nexus1.png"
 
 def create_user_file():
     if not os.path.exists(user_file):
@@ -57,7 +57,10 @@ def get_user_info(username):
     df = pd.read_csv(user_file)
     user_info_str = df.loc[df['username'] == username, 'business_info'].values[0]
     try:
-        user_info_str = user_info_str.strip('"""') if not (math.isnan(user_info_str)) else {}
+        if (isinstance(user_info_str, str)):
+            user_info_str = user_info_str.strip('"""')
+        else:
+            user_info_str = user_info_str.strip('"""') if not (math.isnan(user_info_str)) else {}
         # If it's a string representation of a dict, safely convert it to a dict
         user_info = ast.literal_eval(user_info_str) if user_info_str else {}
     except (ValueError, SyntaxError) as e:
