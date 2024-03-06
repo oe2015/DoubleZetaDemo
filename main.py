@@ -22,7 +22,7 @@ def chatbot_response(question, context):
 # File where user details are stored (for simplicity, using CSV here)
 user_file = "users.csv"
 logo_path = "/Users/omarelherraoui/Desktop/Double_Zeta/logo.png"  # Adjust the path as needed
-logo_path1 = "/Users/omarelherraoui/Desktop/Double_Zeta/Nexus1.png"
+logo_path1 = "Nexus1.png"
 
 def create_user_file():
     if not os.path.exists(user_file):
