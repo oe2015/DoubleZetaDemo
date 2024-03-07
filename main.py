@@ -106,18 +106,39 @@ def business_info_form():
     st.subheader("Tell us about your business")
 
     # Business Type Question
-    st.write("What type of business are you?")
+    # st.write("What type of business are you?")
     business_type=st.session_state.get('business_type', None)
-    cols = st.columns(4)
-    business_types = [("🚀 Startup", "Startup"), ("🏢 SME", "SME"), 
-                    ("💼 Freelancer", "Freelancer"), ("📝 Other", "Other")]
-    for idx, (emoji, bt) in enumerate(business_types):
-        if cols[idx].button(f"{emoji}", key=f"business_{bt.lower()}"):
-            st.session_state['business_type'] = bt
+    # cols = st.columns(4)
+    # business_types = [("🚀 Startup", "Startup"), ("🏢 SME", "SME"), 
+    #                 ("💼 Freelancer", "Freelancer"),("👤 Individual", "Individual")]
+    # for idx, (emoji, bt) in enumerate(business_types):
+    #     if cols[idx].button(f"{emoji}", key=f"business_{bt.lower()}"):
+    #         st.session_state['business_type'] = bt
+    #st.write("What type of business are you?")
 
-    # Check if 'Other' business type is specified and get input
+    # Define your business types without emojis since st.radio handles selection visibility
+    business_types = ["Startup", "SME", "Freelancer", "Individual"]
+
+    # # Use session state to get or set the default business type
+    # selected_business_type = st.radio(
+    #     "Select your business type:",
+    #     business_types,
+    #     index=business_types.index(st.session_state.get('business_type', business_types[0])) if 'business_type' in st.session_state else 0
+    # )
+    business_type= st.radio("What type of business are you?", ("🚀 Startup", "🏢 SME", "💼 Freelancer", "👤 Individual","Other"),horizontal=True)
+
+    # Update the session state with the selected option
+    st.session_state['business_type'] = business_type
+
+
+ 
+
+    # # Check if 'Other' business type is specified and get input
     if business_type == "Other":
-        st.session_state['business_type'] = st.text_input("Please specify your business type:")
+        business_type=st.text_input("Please specify your business type:")
+        
+        st.session_state['business_type'] = business_type
+
 
     legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
   
@@ -126,19 +147,19 @@ def business_info_form():
     has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
 
     # Sector Question with emoticons
-    st.write("What sector do you operate in?")
+    # st.write("What sector do you operate in?")
 
     sector=st.session_state.get('sector', None)
-    cols = st.columns(5)
-    sectors = [("💻 Technology", "Technology"), ("🩺 Healthcare", "Healthcare"), 
-            ("💲 Finance", "Finance"), ("📚 Education", "Education"), ("📝 Other", "Other")]
-    for idx, (emoji, sec) in enumerate(sectors):
-        if cols[idx].button(f"{emoji}", key=f"sector_{sec.lower()}"):
-            st.session_state['sector'] = sec
 
-    # Check if 'Other' sector is specified and get input
+    sector= st.radio("What sector do you operate in?", ("💻 Technology", "🩺 Healthcare", "💲 Finance", "📚 Education","📝 Government","Other"),horizontal=True)
+
+   
+
+    # # Check if 'Other' sector is specified and get input
     if sector == "Other":
-        st.session_state['sector'] = st.text_input("Please specify your sector:")
+        sector=st.text_input("Please specify your sector:")
+        st.session_state['sector'] = sector
+        
 
     # Business Description Question
     business_description = st.text_area("Give a short description about your business, your goals, and objectives")
