@@ -117,16 +117,30 @@ def business_info_form():
     #st.write("What type of business are you?")
 
     # Define your business types without emojis since st.radio handles selection visibility
-    business_types = ["Startup", "SME", "Freelancer", "Individual"]
+    # business_types = ["Startup", "SME", "Freelancer", "Individual"]
 
-    # # Use session state to get or set the default business type
-    # selected_business_type = st.radio(
-    #     "Select your business type:",
-    #     business_types,
-    #     index=business_types.index(st.session_state.get('business_type', business_types[0])) if 'business_type' in st.session_state else 0
-    # )
-    business_type= st.radio("What type of business are you?", ("🚀 Startup", "🏢 SME", "💼 Freelancer", "👤 Individual","Other"),horizontal=True)
+    # business_type= st.radio("What type of business are you?", ("🚀 Startup", "🏢 SME", "💼 Freelancer", "👤 Individual","Other"),horizontal=True)
+    # Mapping of business types to their emoji representations
+    business_types_with_emojis = {
+        "Startup": "🚀 Startup",
+        "SME": "🏢 SME",
+        "Freelancer": "💼 Freelancer",
+        "Individual": "👤 Individual",
+        "Other": "Other",  # Assuming you want to keep "Other" without an emoji
+    }
 
+    # Reverse the mapping for easy lookup from emoji to business type
+    emojis_to_business_types = {v: k for k, v in business_types_with_emojis.items()}
+
+    # Display the radio buttons with emojis
+    selected_business_type_with_emoji = st.radio(
+        "What type of business are you?",
+        tuple(business_types_with_emojis.values()),  # Use the emoji representations for display
+        horizontal=True
+    )
+
+    # Extract the business type name without the emoji for later usage
+    business_type = emojis_to_business_types[selected_business_type_with_emoji]
     # Update the session state with the selected option
     st.session_state['business_type'] = business_type
 
@@ -145,8 +159,28 @@ def business_info_form():
 
     sector=st.session_state.get('sector', None)
 
-    sector= st.radio("What sector do you operate in?", ("💻 Technology", "🩺 Healthcare", "💲 Finance", "📚 Education","📝 Government","Other"),horizontal=True)
+    # sector= st.radio("What sector do you operate in?", ("💻 Technology", "🩺 Healthcare", "💲 Finance", "📚 Education","📝 Government","Other"),horizontal=True)
+    sectors_with_emojis = {
+        "Technology": "💻 Technology",
+        "Healthcare": "🩺 Healthcare",
+        "Finance": "💲 Finance",
+        "Education": "📚 Education",
+        "Government": "📝 Government",
+        "Other": "Other",  # Assuming you want to keep "Other" without an emoji
+    }
 
+    # Reverse the mapping for easy lookup from emoji to sector
+    emojis_to_sectors = {v: k for k, v in sectors_with_emojis.items()}
+
+    # Display the radio buttons with emojis
+    selected_sector_with_emoji = st.radio(
+        "What sector do you operate in?",
+        tuple(sectors_with_emojis.values()),  # Use the emoji representations for display
+        horizontal=True
+    )
+
+    # Extract the sector name without the emoji for later usage
+    sector = emojis_to_sectors[selected_sector_with_emoji]
     # # Check if 'Other' sector is specified and get input
     if sector == "Other":
         sector=st.text_input("Please specify your sector:")
