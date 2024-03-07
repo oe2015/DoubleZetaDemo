@@ -130,19 +130,13 @@ def business_info_form():
     # Update the session state with the selected option
     st.session_state['business_type'] = business_type
 
-
- 
-
     # # Check if 'Other' business type is specified and get input
     if business_type == "Other":
         business_type=st.text_input("Please specify your business type:")
-        
         st.session_state['business_type'] = business_type
-
 
     legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
   
-
     # Office Location Question
     has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
 
@@ -153,14 +147,11 @@ def business_info_form():
 
     sector= st.radio("What sector do you operate in?", ("💻 Technology", "🩺 Healthcare", "💲 Finance", "📚 Education","📝 Government","Other"),horizontal=True)
 
-   
-
     # # Check if 'Other' sector is specified and get input
     if sector == "Other":
         sector=st.text_input("Please specify your sector:")
         st.session_state['sector'] = sector
         
-
     # Business Description Question
     business_description = st.text_area("Give a short description about your business, your goals, and objectives")
 
@@ -174,7 +165,8 @@ def business_info_form():
             "description": business_description
         }
         # Assume 'username' is obtained from Streamlit's session state or other context
-        update_user_info(st.session_state.get('username', 'default_username'), business_info)
+        # update_user_info(st.session_state.get('username', 'default_username'), business_info)
+        update_user_info(st.session_state['username'], str(business_info))
         st.success("Business information saved!")
 
 def main():
