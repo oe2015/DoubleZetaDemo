@@ -274,7 +274,7 @@ def main():
                 context: `{context_str}`
             }});
             </script>
-            <chaindesk-chatbox-standard style="height: 730px;"></chaindesk-chatbox-standard>
+            <chaindesk-chatbox-standard style="height: 500px;"></chaindesk-chatbox-standard>
             </div>
             """
             components.html(chatbot_html, height=500)
