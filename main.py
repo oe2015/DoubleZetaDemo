@@ -267,14 +267,15 @@ def main():
             </style>
 
             <div style="width: 100%; height: 500px;">
-                <script type="module">
-                import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-                Chatbox.initStandard({{
-                    agentId: 'clvsdobcl07rlo98irbdb6414',
-                    context: `{context_str}`
-                }});
-                </script>
-                <chaindesk-chatbox-standard style="height: 500px;"></chaindesk-chatbox-standard>
+            <script type="module">
+            import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+            
+            Chatbox.initStandard({
+                agentId: 'clvsdobcl07rlo98irbdb6414',
+              });
+            </script>
+            
+            <chaindesk-chatbox-standard style="width: 100%; height: 650px" />
             </div>
             """
             components.html(chatbot_html, height=500)
