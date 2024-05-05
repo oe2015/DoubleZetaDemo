@@ -269,13 +269,12 @@ def main():
             <div style="width: 100%; height: 500px;">
             <script type="module">
             import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-            
-            Chatbox.initStandard({
+            Chatbox.initStandard({{
                 agentId: 'clvsdobcl07rlo98irbdb6414',
-              });
+                context: `{context_str}`
+            }});
             </script>
-            
-            <chaindesk-chatbox-standard style="width: 100%; height: 650px" />
+            <chaindesk-chatbox-standard style="height: 730px;"></chaindesk-chatbox-standard>
             </div>
             """
             components.html(chatbot_html, height=500)
