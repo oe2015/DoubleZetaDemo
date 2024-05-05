@@ -14,6 +14,7 @@ st.set_page_config(layout="wide")
 def chatbot_response(question, context):
     response = requests.post("http://127.0.0.1:5000/generate", json={"question": question, "context": context})
     # response = requests.post("http://127.0.0.1:5000", json={"question": question}, headers={"Content-Type": "application/json"})
+    print(response)
     if response.status_code == 200:
         return response.json()
     else:
@@ -21,8 +22,8 @@ def chatbot_response(question, context):
 
 # File where user details are stored (for simplicity, using CSV here)
 user_file = "users.csv"
-logo_path = "/Users/omarelherraoui/Desktop/Double_Zeta/logo.png"  # Adjust the path as needed
-logo_path1 = "Nexus1.png"
+logo_path = "SAFIR.png"  # Adjust the path as needed
+logo_path1 = "SAFIR.png"
 
 def create_user_file():
     if not os.path.exists(user_file):
@@ -55,12 +56,11 @@ import math
 
 def get_user_info(username):
     df = pd.read_csv(user_file)
+    print(df)
     user_info_str = df.loc[df['username'] == username, 'business_info'].values[0]
+    print(user_info_str)
     try:
-        if (isinstance(user_info_str, str)):
-            user_info_str = user_info_str.strip('"""')
-        else:
-            user_info_str = user_info_str.strip('"""') if not (math.isnan(user_info_str)) else {}
+        user_info_str = user_info_str.strip('"""')
         # If it's a string representation of a dict, safely convert it to a dict
         user_info = ast.literal_eval(user_info_str) if user_info_str else {}
     except (ValueError, SyntaxError) as e:
@@ -82,23 +82,42 @@ def display_logo():
     with col2:  # Using the middle column for the image
         st.image(logo_path1, use_column_width=True)  # This will center the image in the middle column
 
+# def business_info_form():
+#     st.subheader("Tell us about your business")
+    # st.write("What type of business are you?")
+    # col1, col2, col3 = st.columns(3)
+    # with col1:
+    #     if st.button("🚀 Startup", key="startup"):
+    #         update_state('business_type', "Startup")
+    # with col2:
+    #     if st.button("🏢 SME", key="sme"):
+    #         update_state('business_type', "SME")
+    # with col3:
+    #     if st.button("💼 Freelancer", key="freelancer"):
+    #         update_state('business_type', "Freelancer")
+    # #business_type = st.selectbox("What type of business are you?", ("Startup", "SME", "Freelancer"))
+    # legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
+    # has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
+    # sector = st.selectbox("What sector do you operate in?", ("Technology", "Healthcare", "Finance", "Education", "Other"))  # Update sectors as needed
+    # business_description = st.text_area("Give a short description about your business, your goals, and objectives")
+    # Business Type Question
+
+    
+    # Inject custom CSS for styling the buttons to be larger and closer together
+   # Function placeholder for 'update_state' (Ensure you have your own implementation)
+
+
 def business_info_form():
         # Inject custom CSS for styling the buttons to be larger and closer together
-    # Inject custom CSS for styling the buttons to fill the space
-    # Inject custom CSS for styling the buttons to fill the space
     st.markdown("""
     <style>
-    button {
-        display: block; /* Display block to fill the column width */
-        width: 100%; /* Set button width relative to the column width */
-        margin: 0.5rem 0; /* Standard margin for top and bottom */
-        padding: 0.75rem 1rem; /* Padding inside the buttons for a larger click area */
-        border-radius: 0.5rem; /* Rounded corners for buttons */
-    }
-    /* Style to reduce space around the button columns */
-    .col-padding {
-        padding-left: 2px; /* Adjust the left padding as needed */
-        padding-right: 2px; /* Adjust the right padding as needed */
+    .streamlit-button {
+        display: inline-flex; /* Align buttons in a row */
+        width: auto; /* Adjust width automatically to content */
+        margin: 5px; /* Keep a small margin */
+        padding: 10px 20px; /* Padding inside buttons */
+        border-radius: 30px; /* Rounded corners for buttons */
+        font-size: 16px; /* Font size for buttons */
     }
     </style>
     """, unsafe_allow_html=True)
@@ -106,86 +125,40 @@ def business_info_form():
     st.subheader("Tell us about your business")
 
     # Business Type Question
-    # st.write("What type of business are you?")
+    st.write("What type of business are you?")
     business_type=st.session_state.get('business_type', None)
-    # cols = st.columns(4)
-    # business_types = [("🚀 Startup", "Startup"), ("🏢 SME", "SME"), 
-    #                 ("💼 Freelancer", "Freelancer"),("👤 Individual", "Individual")]
-    # for idx, (emoji, bt) in enumerate(business_types):
-    #     if cols[idx].button(f"{emoji}", key=f"business_{bt.lower()}"):
-    #         st.session_state['business_type'] = bt
-    #st.write("What type of business are you?")
+    cols = st.columns(4)
+    business_types = [("🚀 Startup", "Startup"), ("🏢 SME", "SME"), 
+                    ("💼 Freelancer", "Freelancer"), ("📝 Other", "Other")]
+    for idx, (emoji, bt) in enumerate(business_types):
+        if cols[idx].button(f"{emoji}", key=f"business_{bt.lower()}"):
+            st.session_state['business_type'] = bt
 
-    # Define your business types without emojis since st.radio handles selection visibility
-    # business_types = ["Startup", "SME", "Freelancer", "Individual"]
-
-    # business_type= st.radio("What type of business are you?", ("🚀 Startup", "🏢 SME", "💼 Freelancer", "👤 Individual","Other"),horizontal=True)
-    # Mapping of business types to their emoji representations
-    business_types_with_emojis = {
-        "Startup": "🚀 Startup",
-        "SME": "🏢 SME",
-        "Freelancer": "💼 Freelancer",
-        "Individual": "👤 Individual",
-        "Other": "Other",  # Assuming you want to keep "Other" without an emoji
-    }
-
-    # Reverse the mapping for easy lookup from emoji to business type
-    emojis_to_business_types = {v: k for k, v in business_types_with_emojis.items()}
-
-    # Display the radio buttons with emojis
-    selected_business_type_with_emoji = st.radio(
-        "What type of business are you?",
-        tuple(business_types_with_emojis.values()),  # Use the emoji representations for display
-        horizontal=True
-    )
-
-    # Extract the business type name without the emoji for later usage
-    business_type = emojis_to_business_types[selected_business_type_with_emoji]
-    # Update the session state with the selected option
-    st.session_state['business_type'] = business_type
-
-    # # Check if 'Other' business type is specified and get input
+    # Check if 'Other' business type is specified and get input
     if business_type == "Other":
-        business_type=st.text_input("Please specify your business type:")
-        st.session_state['business_type'] = business_type
+        st.session_state['business_type'] = st.text_input("Please specify your business type:")
 
     legal_form = st.selectbox("What is your legal form?", ("Company - Foreign Branch", "Company - Foreign GCC", "Company - GCC Branch", "Company - Local Branch", "Company - Non Local", "Establishment", "Establishment - Foreign", "Establishment - GCC", "Establishment - Local Branch", "Establishment - Mubdia'h", "Establishment - Non Local", "General Partnership", "Limited Liability Company", "Private Joint - Stock", "Professional Company", "Professional Establishment", "Public Joint - Stock", "Simple Limited Partnership", "Sole Proprietorship L.L.C.", "Sole Proprietorship PJSC"))
   
+
     # Office Location Question
     has_office = st.radio("Do you have an office in Abu Dhabi?", ("Yes", "No"))
 
     # Sector Question with emoticons
-    # st.write("What sector do you operate in?")
+    st.write("What sector do you operate in?")
 
     sector=st.session_state.get('sector', None)
+    cols = st.columns(5)
+    sectors = [("💻 Technology", "Technology"), ("🩺 Healthcare", "Healthcare"), 
+            ("💲 Finance", "Finance"), ("📚 Education", "Education"), ("📝 Other", "Other")]
+    for idx, (emoji, sec) in enumerate(sectors):
+        if cols[idx].button(f"{emoji}", key=f"sector_{sec.lower()}"):
+            st.session_state['sector'] = sec
 
-    # sector= st.radio("What sector do you operate in?", ("💻 Technology", "🩺 Healthcare", "💲 Finance", "📚 Education","📝 Government","Other"),horizontal=True)
-    sectors_with_emojis = {
-        "Technology": "💻 Technology",
-        "Healthcare": "🩺 Healthcare",
-        "Finance": "💲 Finance",
-        "Education": "📚 Education",
-        "Government": "📝 Government",
-        "Other": "Other",  # Assuming you want to keep "Other" without an emoji
-    }
-
-    # Reverse the mapping for easy lookup from emoji to sector
-    emojis_to_sectors = {v: k for k, v in sectors_with_emojis.items()}
-
-    # Display the radio buttons with emojis
-    selected_sector_with_emoji = st.radio(
-        "What sector do you operate in?",
-        tuple(sectors_with_emojis.values()),  # Use the emoji representations for display
-        horizontal=True
-    )
-
-    # Extract the sector name without the emoji for later usage
-    sector = emojis_to_sectors[selected_sector_with_emoji]
-    # # Check if 'Other' sector is specified and get input
+    # Check if 'Other' sector is specified and get input
     if sector == "Other":
-        sector=st.text_input("Please specify your sector:")
-        st.session_state['sector'] = sector
-        
+        st.session_state['sector'] = st.text_input("Please specify your sector:")
+
     # Business Description Question
     business_description = st.text_area("Give a short description about your business, your goals, and objectives")
 
@@ -199,9 +172,10 @@ def business_info_form():
             "description": business_description
         }
         # Assume 'username' is obtained from Streamlit's session state or other context
-        # update_user_info(st.session_state.get('username', 'default_username'), business_info)
-        update_user_info(st.session_state['username'], str(business_info))
+        update_user_info(st.session_state.get('username', 'default_username'), business_info)
         st.success("Business information saved!")
+  
+   
 
 def main():
     create_user_file()
@@ -214,9 +188,8 @@ def main():
         st.session_state['chat_history'] = []  # Initialize chat history
 
     if st.session_state['logged_in']:
-        st.title(f"Welcome to Nexus, {st.session_state['username']}!")
-        page = st.sidebar.selectbox("Menu", ["Chatbot Interface", "Profile","Update Information"])
-
+        st.title(f"Welcome to SAFIR, {st.session_state['username']}!")
+        page = st.sidebar.selectbox("Menu", ["Update Information", "Profile", "Chatbot Interface"])
         
         if page == "Update Information":
             # Allow users to update their business information
@@ -236,7 +209,7 @@ def main():
                     st.success("Business information saved!")
             else:
                 business_info_form()
-                
+
         elif page == "Profile":
             # Display user's existing information
             st.subheader("Your Profile")
@@ -254,28 +227,26 @@ def main():
                 st.write("No business information found.")
             
         elif page == "Chatbot Interface":
-            # st.subheader("Nexus AI Chatbot")
+            # st.subheader("SAFIR AI Chatbot")
             user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
             # Format the context string using user_info
             if user_info.get('business_description'):
                 context_str=(f"Please use the following information about the user when answering all his questions always address and talk to him using his/her name.The user you are talking to is {st.session_state['username']}. His business description is: {user_info['business_description']}")
-            elif user_info:
+            else:
                 context_str = (
                     f"Please use the following information about the user when answering all his questions, always address and talk to him using his/her name. The user you are talking to is {st.session_state['username']}. His business type is: {user_info['business_type']}, his legal form is: {user_info['legal_form']}, he has an office?: {user_info['has_office']}, his business sector is: {user_info['sector']}, and his business description is: {user_info['description']}."
                 )
-            else:
-                context_str=""
             # Add a toggle for Private Mode in the sidebar
             # private_mode = st.checkbox('Private Mode', value=False)
             private_mode = st.toggle("Protect your data")
             if private_mode:
-                context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by Nexus AI."
+                context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by SAFIR AI."
 
             chatbot_html = f"""
             <style>
                 /* Reset CSS for the Streamlit main container */
                 .main .block-container {{
-                    padding-top: 0 !important;
+                    padding-top: 0 !user_infoimportant;
                     padding-right: 0 !important;
                     padding-left: 0 !important;
                     padding-bottom: 0 !important;
@@ -308,8 +279,27 @@ def main():
             """
             components.html(chatbot_html, height=700)
 
+            # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
+            # if chatbot_type == "Business":
+            #     user_input = st.text_input("Ask me anything related to your business!", key="user_input")
+            # else:
+            #     user_input = st.text_input("Tell me who you want to connect with!", key="user_input")
+
+            # if st.button("Submit"):
+            #     if user_input:
+            #         user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
+            #         response = chatbot_response(user_input, user_info)
+            #         # Save the Q&A to session state
+            #         st.session_state['chat_history'].append({"question": user_input, "answer": response})
+            #         # st.session_state['user_input'] = ""  # Clear input field
+                    
+            #         # Display chat history
+            #         for chat in st.session_state['chat_history']:
+            #             st.text(f"Q: {chat['question']}")
+            #             st.text(f"A: {chat['answer']}")
+            #             st.write("---")  # Divider
     else:
-        st.title("Nexus AI")
+        st.title("SAFIR AI")
 
         menu = ["Login", "SignUp"]
         choice = st.sidebar.selectbox("Menu", menu)
