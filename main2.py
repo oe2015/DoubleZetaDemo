@@ -270,7 +270,7 @@ def main():
                 <script type="module">
                 import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
                 Chatbox.initStandard({{
-                    agentId: 'clt9u89kt0028o98iodv4ek65',
+                    agentId: 'clvsdobcl07rlo98irbdb6414',
                     context: `{context_str}`
                 }});
                 </script>
