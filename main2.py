@@ -22,8 +22,8 @@ def chatbot_response(question, context):
 
 # File where user details are stored (for simplicity, using CSV here)
 user_file = "users.csv"
-logo_path = "/home/mmvc/Documents/ded_comp/DoubleZetaDemo/logo.png"  # Adjust the path as needed
-logo_path1 = "/home/mmvc/Documents/ded_comp/DoubleZetaDemo/nexus.webp"
+logo_path = "SAFIR.png"  # Adjust the path as needed
+logo_path1 = "SAFIR.png"
 
 def create_user_file():
     if not os.path.exists(user_file):
@@ -188,7 +188,7 @@ def main():
         st.session_state['chat_history'] = []  # Initialize chat history
 
     if st.session_state['logged_in']:
-        st.title(f"Welcome to Nexus, {st.session_state['username']}!")
+        st.title(f"Welcome to SAFIR, {st.session_state['username']}!")
         page = st.sidebar.selectbox("Menu", ["Update Information", "Profile", "Chatbot Interface"])
         
         if page == "Update Information":
@@ -227,7 +227,7 @@ def main():
                 st.write("No business information found.")
             
         elif page == "Chatbot Interface":
-            # st.subheader("Nexus AI Chatbot")
+            # st.subheader("SAFIR AI Chatbot")
             user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
             # Format the context string using user_info
             if user_info.get('business_description'):
@@ -240,7 +240,7 @@ def main():
             # private_mode = st.checkbox('Private Mode', value=False)
             private_mode = st.toggle("Protect your data")
             if private_mode:
-                context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by Nexus AI."
+                context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by SAFIR AI."
 
             chatbot_html = f"""
             <style>
@@ -299,7 +299,7 @@ def main():
             #             st.text(f"A: {chat['answer']}")
             #             st.write("---")  # Divider
     else:
-        st.title("Nexus AI")
+        st.title("SAFIR AI")
 
         menu = ["Login", "SignUp"]
         choice = st.sidebar.selectbox("Menu", menu)
