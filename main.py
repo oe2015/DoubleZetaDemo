@@ -266,7 +266,7 @@ def main():
                 }}
             </style>
 
-            <div style="width: 100%; height: 600px;">
+            <div style="width: 100%; height: 700px;">
             <script type="module">
             import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
             Chatbox.initStandard({{
@@ -274,10 +274,10 @@ def main():
                 context: `{context_str}`
             }});
             </script>
-            <chaindesk-chatbox-standard style="height: 600px;"></chaindesk-chatbox-standard>
+            <chaindesk-chatbox-standard style="height: 700px;"></chaindesk-chatbox-standard>
             </div>
             """
-            components.html(chatbot_html, height=600)
+            components.html(chatbot_html, height=700)
 
             # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
             # if chatbot_type == "Business":
