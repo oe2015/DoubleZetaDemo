@@ -266,7 +266,7 @@ def main():
                 }}
             </style>
 
-            <div style="width: 100%; height: 500px;">
+            <div style="width: 100%; height: 600px;">
             <script type="module">
             import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
             Chatbox.initStandard({{
