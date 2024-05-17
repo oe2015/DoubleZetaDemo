@@ -274,10 +274,10 @@ def main():
                 context: `{context_str}`
             }});
             </script>
-            <chaindesk-chatbox-standard style="height: 500px;"></chaindesk-chatbox-standard>
+            <chaindesk-chatbox-standard style="height: 600px;"></chaindesk-chatbox-standard>
             </div>
             """
-            components.html(chatbot_html, height=500)
+            components.html(chatbot_html, height=600)
 
             # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
             # if chatbot_type == "Business":
