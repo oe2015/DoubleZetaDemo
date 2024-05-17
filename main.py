@@ -259,14 +259,14 @@ def main():
                 /* Ensure the chatbot fills the width and has no border or shadow */
                 chaindesk-chatbox-standard {{
                     width: 100% !important;
-                    height: 700px !important;
+                    height: 800px !important;
                     background-color: #000000;
                     border: none !important;
                     box-shadow: none !important;
                 }}
             </style>
 
-            <div style="width: 100%; height: 700px;">
+            <div style="width: 100%; height: 800px;">
             <script type="module">
             import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
             Chatbox.initStandard({{
@@ -274,10 +274,10 @@ def main():
                 context: `{context_str}`
             }});
             </script>
-            <chaindesk-chatbox-standard style="height: 700px;"></chaindesk-chatbox-standard>
+            <chaindesk-chatbox-standard style="height: 800px;"></chaindesk-chatbox-standard>
             </div>
             """
-            components.html(chatbot_html, height=700)
+            components.html(chatbot_html, height=800)
 
             # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
             # if chatbot_type == "Business":
