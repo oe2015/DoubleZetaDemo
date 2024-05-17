@@ -243,61 +243,19 @@ def main():
                 context_str += "Please start your answer with this message when the user asks their question/prompt since you are now in private mode: All data is now private. All of the input is being passed through an advanced encryption algorithm and will not be saved by SAFIR AI."
 
             chatbot_html = f"""
-            <style>
-                /* Reset CSS for the Streamlit main container */
-                .main .block-container {{
-                    padding-top: 0 !user_infoimportant;
-                    padding-right: 0 !important;
-                    padding-left: 0 !important;
-                    padding-bottom: 0 !important;
-                }}
-                /* Full height for the chatbot container and removal of any default spacing */
-                .css-1d391kg {{
-                    padding: 0 !important;
-                    margin: 0 !important;
-                }}
-                /* Ensure the chatbot fills the width and has no border or shadow */
-                chaindesk-chatbox-standard {{
-                    width: 100% !important;
-                    height: 800px !important;
-                    background-color: #000000;
-                    border: none !important;
-                    box-shadow: none !important;
-                }}
-            </style>
-
-            <div style="width: 100%; height: 800px;">
             <script type="module">
-            import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-            Chatbox.initStandard({{
-                agentId: 'clvsdobcl07rlo98irbdb6414',
-                context: `{context_str}`
-            }});
+                import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+                Chatbox.initStandard({{
+                        agentId: 'clvsdobcl07rlo98irbdb6414',
+                        context: `{context_str}`
+                    }});
             </script>
-            <chaindesk-chatbox-standard style="height: 800px;"></chaindesk-chatbox-standard>
-            </div>
+
+            <chaindesk-chatbox-standard style="width: 100%; height: 650px" />
+
             """
-            components.html(chatbot_html, height=800)
-
-            # chatbot_type = st.radio("Choose a chatbot", ("Business", "Networking"))
-            # if chatbot_type == "Business":
-            #     user_input = st.text_input("Ask me anything related to your business!", key="user_input")
-            # else:
-            #     user_input = st.text_input("Tell me who you want to connect with!", key="user_input")
-
-            # if st.button("Submit"):
-            #     if user_input:
-            #         user_info = get_user_info(st.session_state['username'])  # Assuming this returns business info
-            #         response = chatbot_response(user_input, user_info)
-            #         # Save the Q&A to session state
-            #         st.session_state['chat_history'].append({"question": user_input, "answer": response})
-            #         # st.session_state['user_input'] = ""  # Clear input field
-                    
-            #         # Display chat history
-            #         for chat in st.session_state['chat_history']:
-            #             st.text(f"Q: {chat['question']}")
-            #             st.text(f"A: {chat['answer']}")
-            #             st.write("---")  # Divider
+            components.html(chatbot_html, height=700)
     else:
         st.title("SAFIR AI")
 
